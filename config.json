@@ -2,4 +2,5 @@
   "client-token": "",
   "bot-id": "",
   "client-id": ""
+  "default-sfx-command-prefix": "!"
 }

@@ -1,23 +1,20 @@
 import json
 import discord
 import asyncio
-import threading
+
 
 from CommandManager import CommandManager
 from SFXManager import SFXManager
+import Util
 
-with open('config.json') as f:
-    config = json.load(f)
-
-with open('commands.json') as f:
-    commands = json.load(f)
+config = Util.get_config()
+sfx_commands = Util.get_commands()
 
 discord.opus.load_opus(config.get('opus-path', 'libopus/libopus-0.dll'))
 
-
 client = discord.Client()
 sfx_manager = SFXManager(client, config)
-command_manager = CommandManager(client, config, commands, sfx_manager)
+command_manager = CommandManager(client, config, sfx_commands, sfx_manager)
 
 
 @asyncio.coroutine
@@ -31,9 +28,10 @@ async def on_ready():
     print('You are now logged in!')
     print('Username:' + client.user.name)
 
+
 @client.async_event
 async def on_message(message):
-    command_manager.process(message)
+    await command_manager.process(message)
 
 
 loop = asyncio.get_event_loop()
